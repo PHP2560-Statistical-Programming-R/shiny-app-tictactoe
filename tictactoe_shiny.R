@@ -1,5 +1,7 @@
 library(shiny)
 library(shinyjs)
+library(V8)
+library(animation)
 
 # *NOTE: in order for reset to work, user will need
 # the packages: "shinyjs" and "V8" ( use install.packages)
@@ -17,7 +19,8 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       actionButton("play", "Play game"),
-      actionButton("reset", "Reset")
+      actionButton("reset", "Reset"),
+      radioButtons("difficulty", "Choose Difficulty", choices = c("Easy","Medium","Hard"), selected = "Easy")
     ),
 
     # Board
@@ -66,7 +69,7 @@ playGame <- function(game,input,output) {
       
       #Computer move
       if(!checkWon(game) & !checkTie(game)) {
-        move<-computerMove(game)
+        move<-computerMove(game, input$difficulty)
         game<<- updateGame(game,output,player,move)
       
       
@@ -94,8 +97,8 @@ updateGame<- function(game,output,player,move) {
   return(game)
 }
 
-## ** Determine computer move using minimax algorithm **
-computerMove <- function(game) {
+## ** Determine computer move **
+computerMove <- function(game, difficulty) {
   empty <- which(game == 0)
   player <- -1 #(computer)
   
@@ -115,17 +118,56 @@ computerMove <- function(game) {
       possible[(j + 1), i] <- checkScore(tempTempGame, -player)
     }
   }
-  
-  if (!any(abs(possible[1,]) == 6)) { #If no immediate winning move,
-    #Look at OPPONENT's possible moves
-    minimax <- ifelse(player == -1, "max", "min")
-    opponentBest <- apply(possible[-1,], 1, minimax)
-    possible[1,] <- possible[1,] * -player * opponentBest
+  if(difficulty=="Hard"){
+    if (!any(abs(possible[1,]) == 6)) { #If no immediate winning move,
+      #Look at OPPONENT's possible moves
+      minimax <- ifelse(player == -1, "max", "min")
+      opponentBest <- apply(possible[-1,], 1, minimax)
+      possible[1,] <- possible[1,] * -player * opponentBest
+    }
+    
+    minimax <- ifelse(player == -1, "which.min", "which.max") # Minimax
+    move <- do.call(minimax, list(possible[1,])) # Select best move
+    
+    return(move)
+  } 
+  else if(difficulty=="Medium"){
+    #if difficulty is medium, try to win immediately, or else
+    #try to prevent opponent from winning 
+    #immediately, or else move randomly
+    
+    if (any(abs(possible[1,]) == 6)) {
+      move <- which(abs(possible[1,]) == 6)
+      return(move)
+    }
+    
+    board <- t(matrix(game, nrow = 3))
+    opp.coord <- which(board==1, arr.ind = T)
+    direct = list(c(1,1),c(1,0),c(1,-1), c(0,1),c(0,-1),c(-1,1),c(-1,0),c(-1,-1))
+    for(i in 1:dim(opp.coord)[1]){
+      for(j in 1:8){
+        adj = opp.coord[i,]+direct[[j]]
+        if(all(adj %in% 1:3)){
+          if(board[adj[1], adj[2]]==1){
+            block = opp.coord[i,]+2*direct[[j]]
+            if(all(block %in% 1:3)){
+              if(board[block[1],block[2]]==0){
+                move = 3*(block[1]-1)+block[2]
+                return(move)
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    move = sample(empty, 1)
+    return(move)
   }
-  
-  minimax <- ifelse(player == -1, "which.min", "which.max") # Minimax
-  move <- do.call(minimax, list(possible[1,])) # Select best move
-  return(move)
+  else {
+    move = sample(empty, 1) #if difficulty is easy, move randomly
+    return(move)
+  }
 }
 
 ## ** This function checks to see who won and returns score **
@@ -224,6 +266,34 @@ drawLines <- function(board) {
   if (all(ver > 0)) for (i in ver) lines(rep(i, 2), c(0, 30), lwd = 10)
   if (abs(diag1) == 3) lines(c(2, 28), c(28, 2), lwd = 10)
   if (abs(diag2) == 3) lines(c(2, 28), c(2, 28), lwd = 10)
+}
+
+drawBoard <- function(board) { # Draw the board
+  library(animation)
+  
+  #Set up symbols vector and create the plot margins
+  symbols <- c("X", " ", "O") 
+  par(mar = rep(0,4)) 
+  
+  #Create plot for board: 30 pixels by 30 pixels
+  plot.new()
+  plot.window(xlim = c(0,30), ylim = c(0,30))
+  abline(h = c(10, 20), col="black", lwd = 3)
+  abline(v = c(10, 20), col="black", lwd = 3)
+  
+  #board var will have -1 for comp, 0 for unused, 1 for human
+  #so to represent these as x and o, add 2 to index symbols vector
+  #and call this "pieces"
+  pieces <- symbols[board + 2]
+  scaleFactor <- 5
+  
+  #R text function adds text to a plot
+  x_coords <- c(5,15,25,5,15,25)
+  y_coords <- c(25,25,25,15,15,15,5,5,5)
+  text(x=x_coords, 
+       y= y_coords, 
+       labels = pieces, 
+       cex = scaleFactor)
 }
 
 # Run the application 
