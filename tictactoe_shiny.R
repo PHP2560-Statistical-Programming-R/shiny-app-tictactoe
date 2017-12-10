@@ -12,27 +12,94 @@ ui <- fluidPage(
   
   useShinyjs(),
   extendShinyjs(text=jsResetCode),
-
-  titlePanel("Tic Tac Toe"),
+  
+  h1(strong("Tic-Tac-Toe"), align = "center"),
+  h4(em("Three in a row!"), align = "center"),
+  hr(),
+  br(),
 
   # Sidebar with buttons
   sidebarLayout(
     sidebarPanel(
-      actionButton("play", "Play game"),
-      actionButton("reset", "Reset"),
-      radioButtons("difficulty", "Choose Difficulty", choices = c("Easy","Medium","Hard"), selected = "Easy")
+      radioButtons("difficulty", "Choose Difficulty",
+                   choices = c("Easy","Medium","Hard"), 
+                   selected = "Easy"),
+      actionButton("play", "Play Game"),
+      actionButton("reset", "Reset")
     ),
 
     # Board
     mainPanel(
-      textOutput("winner"),
-      plotOutput("board",click="board_click")
+      tabsetPanel(type = "tabs",
+                  tabPanel("Game",
+                           textOutput("winner"),
+                           plotOutput("board",click="board_click")),
+                  br(),
+                  tabPanel("Information",
+                           textOutput("info1"),
+                           br(),
+                           textOutput("info2")),
+                  tabPanel("Levels", 
+                           textOutput("easy"),
+                           br(),
+                           textOutput("medium"),
+                           br(),
+                           textOutput("hard")),
+                  tabPanel("Hint", 
+                           textOutput("text1"),
+                           plotOutput("hint1"),
+                           textOutput("text2"),
+                           plotOutput("hint2")))
     )
   )
 )
 
 server <- function(input,output) {
-  playGame(game,input,output)
+  output$info1 = 
+    renderText({"Tic Tac Toe is known as a zero sum game.  
+      If both players are playing with an optimal strategy, every game will end in a tie."}) 
+  output$info2 = 
+    renderText({
+      "We are using Minimax Algorithm in Game Theory to determine the optimal move for 
+      the computer player. In short, minimax is a decision rule used to minimize the worst-case
+      potential loss. A player considers all the best opponent responses to his strategies, and
+      selects the strategy such that his best strategy yields as large a payoff as possible."})
+
+  output$easy = 
+    renderText({"• In Level Easy, players play against a computer that makes random moves."})
+  output$medium = 
+    renderText({"• In Level Medium, player play against a computer that would try to win immediately, 
+      otherwise try to block the opponent from winning immediately, otherwise move randomly."})
+  output$hard = 
+    renderText({"• In Level Hard, player plays against a computer that always makes the best possible strategy."})
+  
+  output$text1 =
+    renderText({"Stuck? Try to get your board to these formations for a
+      guaranteed win!"})
+  output$text2 = 
+    renderText({"Still Stuck? Try rotating the board and getting into these
+      formations for a guaranteed win!"})
+  
+  output$hint1 = 
+    renderPlot({
+      plot.window(xlim = c(0,30), ylim = c(0,30))
+      abline(h = c(10, 20), col="black", lwd = 3)
+      abline(v = c(10, 20), col="black", lwd = 3)
+      rect(10,10,20,20, col = "blue")
+      rect(0,20,10,30, col = "blue")
+      rect(0,0,10,10, col = "blue")
+    }) 
+  output$hint2 = 
+    renderPlot({
+      plot.window(xlim = c(0,30), ylim = c(0,30))
+      abline(h = c(10, 20), col="black", lwd = 3)
+      abline(v = c(10, 20), col="black", lwd = 3)
+      rect(20,0,30,10, col = "blue")
+      rect(0,20,10,30, col = "blue")
+      rect(0,0,10,10, col = "blue")
+    })
+
+    playGame(game,input,output)
   observeEvent(input$reset, {js$reset()})
 }
 
