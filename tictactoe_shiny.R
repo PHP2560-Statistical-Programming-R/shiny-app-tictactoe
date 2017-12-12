@@ -32,23 +32,34 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(type = "tabs",
                   tabPanel("Game",
-                           textOutput("winner"),
+                           br(),
+                           h3(textOutput("winner"), align = "center"),
+                           br(),
                            plotOutput("board",click="board_click")),
                   br(),
                   tabPanel("Information",
+                           h5("A Zero Sum Game"),
                            textOutput("info1"),
                            br(),
+                           h5("What is Minimax?"),
                            textOutput("info2")),
                   tabPanel("Levels", 
+                           h5("Easy"),
                            textOutput("easy"),
                            br(),
+                           h5("Medium"),
                            textOutput("medium"),
                            br(),
+                           h5("Hard"),
                            textOutput("hard")),
                   tabPanel("Hint", 
-                           textOutput("text1"),
+                           h5(textOutput("text1")),
+                           br(),
+                           p("Figure 1"),
                            plotOutput("hint1"),
-                           textOutput("text2"),
+                           h5(textOutput("text2")),
+                           br(),
+                           p("Figure 2"),
                            plotOutput("hint2")))
     )
   )
@@ -66,12 +77,12 @@ server <- function(input,output) {
       selects the strategy such that his best strategy yields as large a payoff as possible."})
 
   output$easy = 
-    renderText({"• In Level Easy, players play against a computer that makes random moves."})
+    renderText({"Player play against a computer that makes random moves."})
   output$medium = 
-    renderText({"• In Level Medium, player play against a computer that would try to win immediately, 
+    renderText({"Player play against a computer that would try to win immediately, 
       otherwise try to block the opponent from winning immediately, otherwise move randomly."})
   output$hard = 
-    renderText({"• In Level Hard, player plays against a computer that always makes the best possible strategy."})
+    renderText({"Player plays against a computer that always makes the best possible strategy."})
   
   output$text1 =
     renderText({"Stuck? Try to get your board to these formations for a
@@ -85,18 +96,18 @@ server <- function(input,output) {
       plot.window(xlim = c(0,30), ylim = c(0,30))
       abline(h = c(10, 20), col="black", lwd = 3)
       abline(v = c(10, 20), col="black", lwd = 3)
-      rect(10,10,20,20, col = "blue")
-      rect(0,20,10,30, col = "blue")
-      rect(0,0,10,10, col = "blue")
+      rect(10,10,20,20, col = "cornflowerblue")
+      rect(0,20,10,30, col = "cornflowerblue")
+      rect(0,0,10,10, col = "cornflowerblue")
     }) 
   output$hint2 = 
     renderPlot({
       plot.window(xlim = c(0,30), ylim = c(0,30))
       abline(h = c(10, 20), col="black", lwd = 3)
       abline(v = c(10, 20), col="black", lwd = 3)
-      rect(20,0,30,10, col = "blue")
-      rect(0,20,10,30, col = "blue")
-      rect(0,0,10,10, col = "blue")
+      rect(20,0,30,10, col = "cornflowerblue")
+      rect(0,20,10,30, col = "cornflowerblue")
+      rect(0,0,10,10, col = "cornflowerblue")
     })
 
     playGame(game,input,output)
