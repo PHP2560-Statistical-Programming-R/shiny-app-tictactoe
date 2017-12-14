@@ -1,14 +1,13 @@
 library(shiny)
 library(shinyjs)
 library(V8)
-library(animation)
 
 # *NOTE: in order for reset to work, user will need
 # the packages: "shinyjs" and "V8" ( use install.packages)
 
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
 
-ui <- fluidPage(
+ui <- fluidPage(theme="tictactoe.css",
   
   useShinyjs(),
   extendShinyjs(text=jsResetCode),
@@ -36,7 +35,9 @@ ui <- fluidPage(
                            h3(textOutput("winner"), align = "center"),
                            br(),
                            plotOutput("board",click="board_click")),
-                  br(),
+                  tabPanel("Instructions",
+                           h5("How to Play"),
+                           textOutput("instruct")),
                   tabPanel("Information",
                            h5("A Zero Sum Game"),
                            textOutput("info1"),
@@ -66,6 +67,13 @@ ui <- fluidPage(
 )
 
 server <- function(input,output) {
+  output$instruct = 
+    renderText({"To play, simply choose your difficulty level and press play game. Click on empty spots on board.
+      To skip your turn, click on any spot that is not empty.
+      As long as you are still in the game, the lines on the board will turn red. 
+      When the game is over, you will be told who won and the lines on the board will turn blue. 
+      To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
+  
   output$info1 = 
     renderText({"Tic Tac Toe is known as a zero sum game.  
       If both players are playing with an optimal strategy, every game will end in a tie."}) 
@@ -120,16 +128,18 @@ playGame <- function(game,input,output) {
   observeEvent(input$play, {
     player <<- 1
     game <<- rep(0,9)
-    
-    output$winner <- renderText("Click a square")
+
+    output$winner <- renderText("Click an empty square")
     output$board <- renderPlot({
       drawBoard(game)})
     
     #User move:
     observeEvent(input$board_click, {
       move <- getSelectedSquare(input$board_click)
-      game<<- updateGame(game,output,player,move)
+      empty <<- which(game==0)
       
+      game<<- updateGame(game,output,player,move)
+
       #Check for a win/tie
       if(checkTie(game)) {
         output$winner <- renderText("Tie!")
@@ -169,9 +179,17 @@ playGame <- function(game,input,output) {
 
 ## ** Updates game board, called after a player move **
 updateGame<- function(game,output,player,move) {
-  game[move] <- player
-  output$board <- renderPlot({
-    drawBoard(game)})
+  
+  if ((is.element(move, empty)) == FALSE){
+    output$winner <- renderText("Your turn is skipped.")
+  } else {
+    game[move] <- player
+    output$board <- renderPlot({
+      drawBoard(game)})
+    
+  }
+  
+ 
   return(game)
 }
 
@@ -356,8 +374,8 @@ drawBoard <- function(board) { # Draw the board
   #Create plot for board: 30 pixels by 30 pixels
   plot.new()
   plot.window(xlim = c(0,30), ylim = c(0,30))
-  abline(h = c(10, 20), col="black", lwd = 3)
-  abline(v = c(10, 20), col="black", lwd = 3)
+  abline(h = c(10, 20), col="red", lwd = 3)
+  abline(v = c(10, 20), col="red", lwd = 3)
   
   #board var will have -1 for comp, 0 for unused, 1 for human
   #so to represent these as x and o, add 2 to index symbols vector
