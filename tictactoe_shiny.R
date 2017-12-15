@@ -82,8 +82,8 @@ server <- function(input,output) {
   output$instruct = 
     renderText({"To play, simply choose your difficulty level and press play game. Click on empty spots on board.
       To skip your turn, click on any spot that is not empty.
-      As long as you are still in the game, the lines on the board will turn red. 
-      When the game is over, you will be told who won and the lines on the board will turn blue. 
+      As long as you are still in the game or if no one wins, the lines on the board will be red. 
+      If someone wins, you will be told who won and the lines on the board will turn black. 
       To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
   
   output$info1 = 
@@ -200,7 +200,7 @@ playGame <- function(game,input,output) {
 updateGame<- function(game,output,player,move) {
   
   if ((is.element(move, empty)) == FALSE){
-    output$winner <- renderText("Your turn is skipped.")
+    output$winner <- renderText(" ")
   } else {
     game[move] <- player
     output$board <- renderPlot({
