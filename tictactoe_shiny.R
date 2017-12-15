@@ -12,6 +12,7 @@ ui <- fluidPage(theme="tictactoe.css",
   useShinyjs(),
   extendShinyjs(text=jsResetCode),
   
+  br(),
   h1(strong("Tic-Tac-Toe"), align = "center"),
   h4(em("Three in a row!"), align = "center"),
   hr(),
@@ -36,15 +37,23 @@ ui <- fluidPage(theme="tictactoe.css",
                            br(),
                            plotOutput("board",click="board_click")),
                   tabPanel("Instructions",
+                           br(),
                            h5("How to Play"),
-                           textOutput("instruct")),
+                           textOutput("instruct"),
+                           br()),
                   tabPanel("Information",
+                           br(),
                            h5("A Zero Sum Game"),
                            textOutput("info1"),
                            br(),
                            h5("What is Minimax?"),
-                           textOutput("info2")),
+                           textOutput("info2"),
+                           br(),
+                           h5("Here's the Logic"),
+                           textOutput("info3"),
+                           br()),
                   tabPanel("Levels", 
+                           br(),
                            h5("Easy"),
                            textOutput("easy"),
                            br(),
@@ -52,8 +61,10 @@ ui <- fluidPage(theme="tictactoe.css",
                            textOutput("medium"),
                            br(),
                            h5("Hard"),
-                           textOutput("hard")),
+                           textOutput("hard"),
+                           br()),
                   tabPanel("Hint", 
+                           br(),
                            h5(textOutput("text1")),
                            br(),
                            p("Figure 1"),
@@ -61,7 +72,8 @@ ui <- fluidPage(theme="tictactoe.css",
                            h5(textOutput("text2")),
                            br(),
                            p("Figure 2"),
-                           plotOutput("hint2")))
+                           plotOutput("hint2"),
+                           br()))
     )
   )
 )
@@ -83,6 +95,13 @@ server <- function(input,output) {
       the computer player. In short, minimax is a decision rule used to minimize the worst-case
       potential loss. A player considers all the best opponent responses to his strategies, and
       selects the strategy such that his best strategy yields as large a payoff as possible."})
+  output$info3 = 
+    renderText({
+      "The trick to tic-tac-toe is to make the first more in a corner. As
+      you can see, there are so many (there are 7!) guaranteed wins that make use of corner moves. 
+      That way, the only way for your opponent to block you is to place his/her marker 
+      in the center."
+    })
 
   output$easy = 
     renderText({"Player play against a computer that makes random moves."})
