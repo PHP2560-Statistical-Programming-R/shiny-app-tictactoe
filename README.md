@@ -9,7 +9,7 @@ User can play a game of Tic Tac Toe
 1. General layout, information tab about the math behind Tic Tac Toe, info visuals
 
 **Anna**
-1. Tic tac toe theme to make it similar to a notebook; instructions tab 
+1. Tic tac toe theme to make it similar to a notebook; instructions tab; harder level hard-coded that picks up any missing parts minimax didn't account for
 
 **Brian**
 1. Easy / medium level 
