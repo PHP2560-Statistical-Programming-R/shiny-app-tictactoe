@@ -22,7 +22,7 @@ ui <- fluidPage(theme="tictactoe.css",
   sidebarLayout(
     sidebarPanel(
       radioButtons("difficulty", "Choose Difficulty",
-                   choices = c("Easy","Medium","Hard"), 
+                   choices = c("Easy","Medium","Hard", "Harder"), 
                    selected = "Easy"),
       actionButton("play", "Play Game"),
       actionButton("reset", "Reset")
@@ -40,7 +40,14 @@ ui <- fluidPage(theme="tictactoe.css",
                            br(),
                            h5("How to Play"),
                            textOutput("instruct"),
-                           br()),
+                           br(),
+                           textOutput("displays"),
+                           br(),
+                           imageOutput("image1"),
+                           br(),
+                           imageOutput("image2"),
+                           br(),
+                           imageOutput("image3")),
                   tabPanel("Information",
                            br(),
                            h5("A Zero Sum Game"),
@@ -80,12 +87,13 @@ ui <- fluidPage(theme="tictactoe.css",
 
 server <- function(input,output) {
   output$instruct = 
-    renderText({"To play, simply choose your difficulty level and press play game. Click on empty spots on board.
+    renderText({"To play, simply choose your difficulty level (see levels tab for information about different levels) and press play game. Click on empty spots on board.
       To skip your turn, click on any spot that is not empty.
       As long as you are still in the game or if no one wins, the lines on the board will be red. 
       If someone wins, you will be told who won and the lines on the board will turn black. 
       To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
-  
+  output$displays =
+    renderText({"Open in browser for best viewing options. Below shows images of the boards and how it looks if you win or lose."})
   output$info1 = 
     renderText({"Tic Tac Toe is known as a zero sum game.  
       If both players are playing with an optimal strategy, every game will end in a tie."}) 
@@ -109,7 +117,7 @@ server <- function(input,output) {
     renderText({"Player play against a computer that would try to win immediately, 
       otherwise try to block the opponent from winning immediately, otherwise move randomly."})
   output$hard = 
-    renderText({"Player plays against a computer that always makes the best possible strategy."})
+    renderText({"Player plays against a computer that always makes the best possible strategy. Click harder for an even harder strategy to beat."})
   
   output$text1 =
     renderText({"Stuck? Try to get your board to these formations for a
@@ -234,6 +242,7 @@ computerMove <- function(game, difficulty) {
     }
   }
   if(difficulty=="Hard"){
+    
     if (!any(abs(possible[1,]) == 6)) { #If no immediate winning move,
       #Look at OPPONENT's possible moves
       minimax <- ifelse(player == -1, "max", "min")
@@ -242,10 +251,28 @@ computerMove <- function(game, difficulty) {
     }
     
     minimax <- ifelse(player == -1, "which.min", "which.max") # Minimax
-    move <- do.call(minimax, list(possible[1,])) # Select best move
+      move <- do.call(minimax, list(possible[1,])) # Select best move
+    return(move)
+  } else if (difficulty == "Harder"){
+    if (!any(abs(possible[1,]) == 6)) { #If no immediate winning move,
+      #Look at OPPONENT's possible moves
+      minimax <- ifelse(player == -1, "max", "min")
+      opponentBest <- apply(possible[-1,], 1, minimax)
+      possible[1,] <- possible[1,] * -player * opponentBest
+    }
+    
+    minimax <- ifelse(player == -1, "which.min", "which.max") # Minimax
+    
+    if (game[5] == 0){
+      move <- 5
+    } else if ((game[5] == 1) & (game[3] == 0) & (game[9] == 1)){
+      move <- 3
+    } else {
+      move <- do.call(minimax, list(possible[1,])) # Select best move
+    }
     
     return(move)
-  } 
+  }
   else if(difficulty=="Medium"){
     #if difficulty is medium, try to win immediately, or else
     #try to prevent opponent from winning 
