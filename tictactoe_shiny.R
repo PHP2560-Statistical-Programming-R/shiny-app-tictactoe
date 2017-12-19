@@ -263,7 +263,7 @@ computerMove <- function(game, difficulty) {
     minimax <- ifelse(player == -1, "which.min", "which.max") # Minimax
       move <- do.call(minimax, list(possible[1,])) # Select best move
     return(move)
-  } else if (difficulty == "Harder"){
+  } else if (difficulty == "Challenge"){
     if (!any(abs(possible[1,]) == 6)) { #If no immediate winning move,
       #Look at OPPONENT's possible moves
       minimax <- ifelse(player == -1, "max", "min")
