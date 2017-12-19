@@ -31,19 +31,18 @@ ui <- fluidPage(theme="tictactoe.css",
     # Board
     mainPanel(
       tabsetPanel(type = "tabs",
-                  tabPanel("Game",
+                  tabPanel("Welcome",
                            br(),
-                           h3(textOutput("winner"), align = "center"),
+                           h6("Head over to the Game tab to play!", align = "center"),
                            br(),
-                           plotOutput("board",click="board_click")),
-                  tabPanel("Instructions",
-                           br(),
-                           h5("How to Play"),
+                           h6("Instructions"),
                            textOutput("instruct1"),
                            br(),
                            textOutput("instruct2"),
                            br(),
                            textOutput("instruct3"),
+                           br(),
+                           textOutput("instruct4"),
                            br(),
                            textOutput("displays"),
                            br(),
@@ -52,6 +51,11 @@ ui <- fluidPage(theme="tictactoe.css",
                            img(src = "image2.png", height=500, width=700),
                            br(),
                            img(src = "image3.png", height=500, width=700)),
+                  tabPanel("Game",
+                           br(),
+                           h3(textOutput("winner"), align = "center"),
+                           br(),
+                           plotOutput("board",click="board_click")),
                   tabPanel("Information",
                            br(),
                            h5("A Zero Sum Game"),
@@ -95,11 +99,11 @@ server <- function(input,output) {
   output$instruct1 = 
     renderText({"**Open in browser for best viewing options**"})
   output$instruct2 = 
-    renderText({"To play, choose your difficulty level (see levels tab) and press play game. Click on empty spots on board.
-      To skip your turn, click on any spot that is not empty. When your game is live, the lines on the board will be red. 
-      If someone wins, you will be told who won and the lines will turn black."})
-  output$instruct3 = 
-    renderText({"Click reset to play again."})
+    renderText({"1. Choose your difficulty level and press play game."})
+  output$instruct3 =
+    renderText({"2. Click on empty spots on board. To skip your turn, click on any spot that is not empty. "})
+  output$instruct4 = 
+    renderText({"3. Click reset to play again."})
   output$displays =
     renderText({"Below shows images of the boards and some of the potential outcomes"})
   output$info1 = 
@@ -127,7 +131,7 @@ server <- function(input,output) {
   output$hard = 
     renderText({"Player plays against a computer that plays intelligently."})
   output$challenge = 
-    renderText({"Player plays against a computer with a strategy designed to imitate perfect gameplay"})
+    renderText({"Player plays against a computer with a strategy designed to imitate perfect gameplay."})
   
   output$text1 =
     renderText({"Stuck? Try to get your board to these formations for a
