@@ -22,7 +22,7 @@ ui <- fluidPage(theme="tictactoe.css",
   sidebarLayout(
     sidebarPanel(
       radioButtons("difficulty", "Choose Difficulty",
-                   choices = c("Easy","Medium","Hard", "Harder"), 
+                   choices = c("Easy","Medium","Hard", "Challenge"), 
                    selected = "Easy"),
       actionButton("play", "Play Game"),
       actionButton("reset", "Reset")
@@ -39,15 +39,19 @@ ui <- fluidPage(theme="tictactoe.css",
                   tabPanel("Instructions",
                            br(),
                            h5("How to Play"),
-                           textOutput("instruct"),
+                           textOutput("instruct1"),
+                           br(),
+                           textOutput("instruct2"),
+                           br(),
+                           textOutput("instruct3"),
                            br(),
                            textOutput("displays"),
                            br(),
-                           imageOutput("image1"),
+                           img(src = "image1.png", height=500, width=700),
                            br(),
-                           imageOutput("image2"),
+                           img(src = "image2.png", height=500, width=700),
                            br(),
-                           imageOutput("image3")),
+                           img(src = "image3.png", height=500, width=700)),
                   tabPanel("Information",
                            br(),
                            h5("A Zero Sum Game"),
@@ -69,7 +73,9 @@ ui <- fluidPage(theme="tictactoe.css",
                            br(),
                            h5("Hard"),
                            textOutput("hard"),
-                           br()),
+                           br(),
+                           h5("Challenge"),
+                           textOutput("challenge")),
                   tabPanel("Hint", 
                            br(),
                            h5(textOutput("text1")),
@@ -86,14 +92,16 @@ ui <- fluidPage(theme="tictactoe.css",
 )
 
 server <- function(input,output) {
-  output$instruct = 
-    renderText({"To play, simply choose your difficulty level (see levels tab for information about different levels) and press play game. Click on empty spots on board.
-      To skip your turn, click on any spot that is not empty.
-      As long as you are still in the game or if no one wins, the lines on the board will be red. 
-      If someone wins, you will be told who won and the lines on the board will turn black. 
-      To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
+  output$instruct1 = 
+    renderText({"**Open in browser for best viewing options**"})
+  output$instruct2 = 
+    renderText({"To play, simply choose your difficulty level (see levels tab) and press play game. Click on empty spots on board.
+      To skip your turn, click on any spot that is not empty. As long as you are still in the game or if no one wins, the lines on the board will be red. 
+      If someone wins, you will be told who won and the lines on the board will turn black."})
+  output$instruct3 = 
+    renderText({"To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
   output$displays =
-    renderText({"Open in browser for best viewing options. Below shows images of the boards and how it looks if you win or lose."})
+    renderText({"Below shows images of the boards and some of the potential outcomes"})
   output$info1 = 
     renderText({"Tic Tac Toe is known as a zero sum game.  
       If both players are playing with an optimal strategy, every game will end in a tie."}) 
@@ -117,7 +125,9 @@ server <- function(input,output) {
     renderText({"Player play against a computer that would try to win immediately, 
       otherwise try to block the opponent from winning immediately, otherwise move randomly."})
   output$hard = 
-    renderText({"Player plays against a computer that always makes the best possible strategy. Click harder for an even harder strategy to beat."})
+    renderText({"Player plays against a computer that plays intelligently."})
+  output$challenge = 
+    renderText({"Player plays against a computer with a strategy designed to imitate perfect gameplay"})
   
   output$text1 =
     renderText({"Stuck? Try to get your board to these formations for a
