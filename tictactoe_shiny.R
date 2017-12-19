@@ -95,9 +95,9 @@ server <- function(input,output) {
   output$instruct1 = 
     renderText({"**Open in browser for best viewing options**"})
   output$instruct2 = 
-    renderText({"To play, simply choose your difficulty level (see levels tab) and press play game. Click on empty spots on board.
-      To skip your turn, click on any spot that is not empty. As long as you are still in the game or if no one wins, the lines on the board will be red. 
-      If someone wins, you will be told who won and the lines on the board will turn black."})
+    renderText({"To play, choose your difficulty level (see levels tab) and press play game. Click on empty spots on board.
+      To skip your turn, click on any spot that is not empty. When your game is live, the lines on the board will be red. 
+      If someone wins, you will be told who won and the lines will turn black."})
   output$instruct3 = 
     renderText({"To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
   output$displays =
