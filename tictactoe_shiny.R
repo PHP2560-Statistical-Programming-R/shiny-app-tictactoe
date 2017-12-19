@@ -99,7 +99,7 @@ server <- function(input,output) {
       To skip your turn, click on any spot that is not empty. When your game is live, the lines on the board will be red. 
       If someone wins, you will be told who won and the lines will turn black."})
   output$instruct3 = 
-    renderText({"To play again, simply click reset on the side panel and then choose your difficulty level and play again."})
+    renderText({"Click reset to play again."})
   output$displays =
     renderText({"Below shows images of the boards and some of the potential outcomes"})
   output$info1 = 
