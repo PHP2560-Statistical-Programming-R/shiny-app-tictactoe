@@ -1,9 +1,10 @@
 library(shiny)
 library(shinyjs)
 library(V8)
+library(animation)
 
 # *NOTE: in order for reset to work, user will need
-# the packages: "shinyjs" and "V8" ( use install.packages)
+# the packages: "shiny", "shinyjs", "V8", "animation" ( use install.packages)
 
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
 
@@ -425,7 +426,6 @@ drawLines <- function(board) {
 }
 
 drawBoard <- function(board) { # Draw the board
-  library(animation)
   
   #Set up symbols vector and create the plot margins
   symbols <- c("X", " ", "O") 
