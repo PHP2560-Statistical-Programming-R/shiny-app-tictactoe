@@ -7,13 +7,13 @@ To begin, users simply go to the game tab and enter the level they want to play 
 # What each group member did
 
 **Olivia** 
-1. Created the hard level of the tic tac toe game, as well as the original package we used to base the Shiny App off of. 
+1. Wrote the code for the hard level of the tic tac toe game, as well as the original R package that we used to base the Shiny App off of, as part of our R Package assignment.  
 
 **Linde**
-1. General layout, welcome tab (instructions and screenshots), information tab (math and strategy behind tic tac toe), hint tab (info visuals about guaranteed win strategies). 
+1. General ui components and layout of app (excluding theme); welcome tab (updated layout of instructions and added game screenshots), information tab (math and strategy behind game), levels tab (wrote levels descriptions), hint tab (info visuals re: guaranteed win strategies). 
 
 **Anna**
-1. Tic tac toe theme to make it similar to a notebook; wrote instructions; harder level hard-coded that picks up any missing parts minimax didn't account for for a challenge; edited readme with description of game. 
+1. Created the tic tac toe theme to make it similar to a notebook; wrote instructions; harder level hard-coded that picks up any missing parts minimax didn't account for for a challenge; edited readme with description of game. 
 
 **Brian**
-1. Easy / medium levels of tic tac toe. 
+1. Wrote the code for the easy and medium levels of tic tac toe. 
