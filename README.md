@@ -7,13 +7,13 @@ To begin, users simply go to the game tab and enter the level they want to play 
 # What each group member did
 
 **Olivia** 
-1. We will create a Tic Tac Toe computer game, in which the user can visually interact with the computer player on a 3x3 board. (hard) 
+1. Created the hard level of the tic tac toe game, as well as the original package we used to base the Shiny App off of. 
 
 **Linde**
-1. General layout, information tab about the math behind Tic Tac Toe, info visuals
+1. General layout, welcome tab (instructions and screenshots), information tab (math and strategy behind tic tac toe), hint tab (info visuals about guaranteed win strategies). 
 
 **Anna**
-1. Tic tac toe theme to make it similar to a notebook; wrote instructions; harder level hard-coded that picks up any missing parts minimax didn't account for for a challenge; edited readme with description of game 
+1. Tic tac toe theme to make it similar to a notebook; wrote instructions; harder level hard-coded that picks up any missing parts minimax didn't account for for a challenge; edited readme with description of game. 
 
 **Brian**
-1. Easy / medium level 
+1. Easy / medium levels of tic tac toe. 
